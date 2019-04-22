@@ -16,11 +16,6 @@
 
 @implementation ViewController
 
-void(^calendarForEventStore)(EKEventStore *, CalendarForEventStoreCompletionBlock) = ^(EKEventStore *eventStore, CalendarForEventStoreCompletionBlock completionBlock)
-{
-    
-};
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -81,7 +76,7 @@ void(^calendarForEventStore)(EKEventStore *, CalendarForEventStoreCompletionBloc
                      __autoreleasing NSError *saveEventError;
                      if ([eventStore saveEvent:event span:EKSpanThisEvent commit:FALSE error:&saveEventError])
                      {
-                         NSLog(@"Event saved %@", [NSString stringWithFormat:@"%@ %@", [planetaryHour objectForKey:@(Symbol)], [planetaryHour objectForKey:@(Name)]]);
+                         NSLog(@"Event saved %@", [NSString stringWithFormat:@"%@ %@", [[planetaryHour objectForKey:@(Symbol)] string], [planetaryHour objectForKey:@(Name)]]);
                      } else {
                          NSLog(@"Error saving event: %@", saveEventError.description);
                      }
