@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B93BC592226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; };
+		B93BC593226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B9C0CF77226D492E00EBA7C0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF76226D492E00EBA7C0 /* AppDelegate.m */; };
 		B9C0CF7A226D492E00EBA7C0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF79226D492E00EBA7C0 /* ViewController.m */; };
 		B9C0CF7D226D492E00EBA7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF7B226D492E00EBA7C0 /* Main.storyboard */; };
 		B9C0CF7F226D492E00EBA7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF7E226D492E00EBA7C0 /* Assets.xcassets */; };
 		B9C0CF82226D492E00EBA7C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF80226D492E00EBA7C0 /* LaunchScreen.storyboard */; };
 		B9C0CF85226D492E00EBA7C0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF84226D492E00EBA7C0 /* main.m */; };
-		B9C0CF90226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */; };
-		B9C0CF91226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +24,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B9C0CF91226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
+				B93BC593226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -32,6 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B93BC589226E578E00BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourCocoaTouchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourCocoaTouchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C0CF72226D492E00EBA7C0 /* JABPlanetaryHourCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JABPlanetaryHourCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C0CF75226D492E00EBA7C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9C0CF76226D492E00EBA7C0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -42,7 +44,6 @@
 		B9C0CF81226D492E00EBA7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9C0CF83226D492E00EBA7C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9C0CF84226D492E00EBA7C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourCocoaTouchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,19 +51,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9C0CF90226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */,
+				B93BC592226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B93BC574226E52E700BB32B7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B93BC589226E578E00BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B9C0CF69226D492E00EBA7C0 = {
 			isa = PBXGroup;
 			children = (
-				B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */,
+				B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */,
 				B9C0CF74226D492E00EBA7C0 /* JABPlanetaryHourCalendar */,
 				B9C0CF73226D492E00EBA7C0 /* Products */,
+				B93BC574226E52E700BB32B7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
