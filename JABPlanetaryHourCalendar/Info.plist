@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app uses the GPS to calculate location-specific planetary-hour data</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app will add a new planetary hour calendar (or replace an existing one)</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>This app does not use the Reminders app</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

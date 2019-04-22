@@ -13,19 +13,36 @@
 		B9C0CF7F226D492E00EBA7C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF7E226D492E00EBA7C0 /* Assets.xcassets */; };
 		B9C0CF82226D492E00EBA7C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF80226D492E00EBA7C0 /* LaunchScreen.storyboard */; };
 		B9C0CF85226D492E00EBA7C0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF84226D492E00EBA7C0 /* main.m */; };
+		B9C0CF90226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */; };
+		B9C0CF91226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B9C0CF92226D519900EBA7C0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B9C0CF91226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		B9C0CF72226D492E00EBA7C0 /* JABPlanetaryHourCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JABPlanetaryHourCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C0CF75226D492E00EBA7C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9C0CF76226D492E00EBA7C0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B9C0CF78226D492E00EBA7C0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B9C0CF79226D492E00EBA7C0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B9C0CF79226D492E00EBA7C0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; wrapsLines = 0; };
 		B9C0CF7C226D492E00EBA7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B9C0CF7E226D492E00EBA7C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B9C0CF81226D492E00EBA7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9C0CF83226D492E00EBA7C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9C0CF84226D492E00EBA7C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourCocoaTouchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9C0CF90226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +60,7 @@
 		B9C0CF69226D492E00EBA7C0 = {
 			isa = PBXGroup;
 			children = (
+				B9C0CF8F226D519900EBA7C0 /* JABPlanetaryHourCocoaTouchFramework.framework */,
 				B9C0CF74226D492E00EBA7C0 /* JABPlanetaryHourCalendar */,
 				B9C0CF73226D492E00EBA7C0 /* Products */,
 			);
@@ -81,6 +100,7 @@
 				B9C0CF6E226D492E00EBA7C0 /* Sources */,
 				B9C0CF6F226D492E00EBA7C0 /* Frameworks */,
 				B9C0CF70226D492E00EBA7C0 /* Resources */,
+				B9C0CF92226D519900EBA7C0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
