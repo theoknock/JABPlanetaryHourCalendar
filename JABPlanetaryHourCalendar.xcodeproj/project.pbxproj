@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B93BC592226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; };
-		B93BC593226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B93BC5C9226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; };
+		B93BC5CA226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B9C0CF77226D492E00EBA7C0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF76226D492E00EBA7C0 /* AppDelegate.m */; };
 		B9C0CF7A226D492E00EBA7C0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF79226D492E00EBA7C0 /* ViewController.m */; };
 		B9C0CF7D226D492E00EBA7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF7B226D492E00EBA7C0 /* Main.storyboard */; };
@@ -18,13 +18,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B9C0CF92226D519900EBA7C0 /* Embed Frameworks */ = {
+		B93BC5CB226EE17100BB32B7 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B93BC593226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
+				B93BC5CA226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B93BC592226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */,
+				B93BC5C9226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +110,7 @@
 				B9C0CF6E226D492E00EBA7C0 /* Sources */,
 				B9C0CF6F226D492E00EBA7C0 /* Frameworks */,
 				B9C0CF70226D492E00EBA7C0 /* Resources */,
-				B9C0CF92226D519900EBA7C0 /* Embed Frameworks */,
+				B93BC5CB226EE17100BB32B7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

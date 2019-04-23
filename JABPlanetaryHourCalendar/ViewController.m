@@ -48,10 +48,10 @@
                     calendar = [eventStore defaultCalendarForNewEvents];
                 }
                 
-                NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 30)];      // Calendar one month of events, starting today
+                NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 30)];      // Calendar one year of events, starting today
                 NSIndexSet *dataIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 8)];       // Return all data generated for a planetary hour
                 NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 24)];      // Generate data for each planetary hour of the day
-                
+                __block int dayCounter = 0;
                 [PlanetaryHourDataSource.data
                  solarCyclesForDays:daysIndices
                  planetaryHourData:dataIndices
@@ -72,7 +72,7 @@
                      event.startDate    = [planetaryHour objectForKey:@(StartDate)];
                      event.endDate      = [planetaryHour objectForKey:@(EndDate)];
                      event.allDay       = NO;
-
+                     
                      __autoreleasing NSError *saveEventError;
                      if ([eventStore saveEvent:event span:EKSpanThisEvent commit:FALSE error:&saveEventError])
                      {
@@ -82,13 +82,13 @@
                      }
                  }
                  planetaryHoursCompletionBlock:^(NSArray<NSDictionary<NSNumber *,NSDate *> *> * _Nonnull planetaryHours) {
-                     
+                     NSLog(@"Day %d", dayCounter++);
                  }
                  planetaryHourDataSourceCompletionBlock:^(NSError * _Nullable error) {
                      __autoreleasing NSError *saveEventsError;
                      if ([eventStore commit:&saveEventsError])
                      {
-                         NSLog(@"Event saved to event store");
+                         NSLog(@"Events saved to event store");
                      } else {
                          NSLog(@"Error saving events: %@", saveEventsError.description);
                      }
