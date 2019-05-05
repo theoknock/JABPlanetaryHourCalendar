@@ -100,29 +100,28 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
                                                             });
                                                     } planetaryHourDataSourceCompletionBlock:^(NSError * _Nullable error) {
                                                         if (error)
-                                                            NSLog(@"JABPlanetaryHourFramework error: %@", error.description);
+                                                            [self log:@"JABPlanetaryHourFramework" entry:error.description time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
                                                         else
-                                                            NSLog(@"JABPlanetaryHourFramework calculations complete");
+                                                            [self log:@"JABPlanetaryHourFramework" entry:@"JABPlanetaryHourFramework calculations complete." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
                                                         
                                                         if ([self->eventStore saveCalendar:calendar commit:TRUE error:nil])
-                                                            NSLog(@"New planetary hour calendar saved.");
+                                                            [self log:@"JABPlanetaryHourFramework" entry:@"New planetary hour calendar saved." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
                                                         else
-                                                            NSLog(@"Error saving new planetary hour calendar.");
+                                                            [self log:@"JABPlanetaryHourFramework" entry:@"Error saving new planetary hour calendar." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
                                                     }];
                             }
                             else
-                                NSLog(@"Error saving changes to event store:\t%@", removeOldCalendarError.description);
-                            
+                                [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Error saving changes to event store:\t%@", removeOldCalendarError.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
                         });
                     else
-                        NSLog(@"Error removing planetary hour calendar:/t%@", error.description);
+                        [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Error removing planetary hour calendar:/t%@", error.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
                 }
             }];
             
             
             
         } else {
-            NSLog(@"Access to event store denied: %@", error.description);
+            [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Access to event store denied: %@", error.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
         }
     }];
 }
