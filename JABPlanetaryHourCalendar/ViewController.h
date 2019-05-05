@@ -12,6 +12,7 @@
 @interface ViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
+@property (weak, nonatomic) IBOutlet UITextView *eventLogTextView;
 
 @end
 

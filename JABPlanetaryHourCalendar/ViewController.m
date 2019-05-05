@@ -8,10 +8,21 @@
 
 #import "ViewController.h"
 #import <JABPlanetaryHourCocoaTouchFramework/JABPlanetaryHourCocoaTouchFramework.h>
+#import <CoreMedia/CoreMedia.h>
 
+typedef NS_ENUM(NSUInteger, LogTextAttributes) {
+    LogTextAttributes_Error,
+    LogTextAttributes_Success,
+    LogTextAttributes_Operation,
+    LogTextAttributes_Event
+};
 
 @interface ViewController ()
 {
+    dispatch_queue_t loggerQueue;
+    dispatch_queue_t taskQueue;
+    NSDictionary *_eventTextAttributes, *_operationTextAttributes, *_errorTextAttributes, *_successTextAttributes;
+    
     __block EKEventStore *eventStore;
 }
 
@@ -38,37 +49,39 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
 
 - (void)calendarPlanetaryHours
 {
-    NSLog(@"OBSERVED: PlanetaryHoursDataSourceUpdatedNotification");
+    [self log:@"JABPlanetaryHourFramework" entry:@"Received GPS location data" time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Event];
     [eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
         if (granted)
         {
             // Remove any existing Planetary Hours calendar
-            NSArray <EKCalendar *> *calendars = [eventStore calendarsForEntityType:EKEntityTypeEvent];
+            NSArray <EKCalendar *> *calendars = [self->eventStore calendarsForEntityType:EKEntityTypeEvent];
             [calendars enumerateObjectsUsingBlock:^(EKCalendar * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([obj.title isEqualToString:@"Planetary Hour"]) {
-                    NSLog(@"Existing planetary hour calendar found...");
-                    NSLog(@"Removing existing planetary hour calendar...");
+                    [self log:@"EventKit" entry:@"Existing planetary hour calendar found..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
+                    [self log:@"EventKit" entry:@"Removing existing planetary hour calendar..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
+                    
                     *stop = TRUE;
                     __autoreleasing NSError *error;
-                    if ([eventStore removeCalendar:obj commit:TRUE error:&error])
+                    if ([self->eventStore removeCalendar:obj commit:TRUE error:&error])
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            NSLog(@"Planetary hour calendar removed.");
-                            NSLog(@"Removing existing planetary hour calendar...");
+                            [self log:@"EventKit" entry:@"Planetary hour calendar removed." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+                            
                             __autoreleasing NSError *removeOldCalendarError;
-                            if ([eventStore saveCalendar:obj commit:TRUE error:&removeOldCalendarError])
-                                NSLog(@"Changes saved to event store");
-                            __block EKCalendar *calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:eventStore];
+                            if ([self->eventStore saveCalendar:obj commit:TRUE error:&removeOldCalendarError])
+                                [self log:@"EventKit" entry:@"Changes saved to event store" time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+                            __block EKCalendar *calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:self->eventStore];
                             calendar.title = @"Planetary Hour";
-                            calendar.source = eventStore.sources[1];
+                            calendar.source = self->eventStore.sources[1];
                             __autoreleasing NSError *error;
-                            if ([eventStore saveCalendar:calendar commit:TRUE error:&error])
+                            if ([self->eventStore saveCalendar:calendar commit:TRUE error:&error])
                             {
                                 if (error)
                                 {
-                                    NSLog(@"Error creating new planetary hour calendar: %@\nCreating a default calendar for new planetary hour events...", error.localizedDescription);
-                                    calendar = [eventStore defaultCalendarForNewEvents];
+                                    [self log:@"EventKit" entry:[NSString stringWithFormat:@"Error creating new planetary hour calendar: %@\nCreating a default calendar for new planetary hour events...", error.localizedDescription] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
+                                    calendar = [self->eventStore defaultCalendarForNewEvents];
                                 } else {
-                                    NSLog(@"New planetary hour calendar created...");
+                                    [self log:@"EventKit" entry:@"New planetary hour calendar created..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+
                                 }
                                 
                                 NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 365)];      // Calendar one year of events, starting today
@@ -79,9 +92,9 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
                                 [PlanetaryHourDataSource.data solarCyclesForDays:daysIndices planetaryHourData:dataIndices planetaryHours:hoursIndices
                                                        solarCycleCompletionBlock:nil
                                                     planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
-                                                        [eventStore saveEvent:planetaryHourEvent(eventStore, calendar, planetaryHour, coordinate) span:EKSpanThisEvent commit:FALSE error:nil];
+                                                        [self->eventStore saveEvent:planetaryHourEvent(self->eventStore, calendar, planetaryHour, coordinate) span:EKSpanThisEvent commit:FALSE error:nil];
                                                     } planetaryHoursCompletionBlock:^(NSArray<NSDictionary<NSNumber *,NSDate *> *> * _Nonnull planetaryHours) {
-                                                        if ([eventStore commit:nil])
+                                                        if ([self->eventStore commit:nil])
                                                             dispatch_async(dispatch_get_main_queue(), ^{
                                                                 [self.datePicker setDate:[planetaryHours[0] objectForKey:@(StartDate)]];
                                                             });
@@ -91,7 +104,7 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
                                                         else
                                                             NSLog(@"JABPlanetaryHourFramework calculations complete");
                                                         
-                                                        if ([eventStore saveCalendar:calendar commit:TRUE error:nil])
+                                                        if ([self->eventStore saveCalendar:calendar commit:TRUE error:nil])
                                                             NSLog(@"New planetary hour calendar saved.");
                                                         else
                                                             NSLog(@"Error saving new planetary hour calendar.");
@@ -114,9 +127,104 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
     }];
 }
 
+- (void)textStyles
+{
+    NSMutableParagraphStyle *leftAlignedParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    leftAlignedParagraphStyle.alignment = NSTextAlignmentLeft;
+    _operationTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorWithRed:0.87 green:0.5 blue:0.0 alpha:1.0],
+                                 NSFontAttributeName: [UIFont systemFontOfSize:11.0 weight:UIFontWeightMedium]};
+    
+    NSMutableParagraphStyle *fullJustificationParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    fullJustificationParagraphStyle.alignment = NSTextAlignmentJustified;
+    _errorTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorWithRed:0.91 green:0.28 blue:0.5 alpha:1.0],
+                             NSFontAttributeName: [UIFont systemFontOfSize:11.0 weight:UIFontWeightMedium]};
+    
+    NSMutableParagraphStyle *rightAlignedParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    rightAlignedParagraphStyle.alignment = NSTextAlignmentRight;
+    _eventTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorWithRed:0.0 green:0.54 blue:0.87 alpha:1.0],
+                             NSFontAttributeName: [UIFont systemFontOfSize:11.0 weight:UIFontWeightMedium],
+                             NSParagraphStyleAttributeName: rightAlignedParagraphStyle};
+    
+    NSMutableParagraphStyle *centerAlignedParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    centerAlignedParagraphStyle.alignment = NSTextAlignmentCenter;
+    _successTextAttributes = @{NSForegroundColorAttributeName: [UIColor colorWithRed:0.0 green:0.87 blue:0.19 alpha:1.0],
+                               NSFontAttributeName: [UIFont systemFontOfSize:11.0 weight:UIFontWeightMedium],
+                               NSParagraphStyleAttributeName: rightAlignedParagraphStyle}; // cnanged to right-aligned
+}
+
+static NSString *stringFromCMTime(CMTime time)
+{
+    NSString *stringFromCMTime;
+    float seconds = round(CMTimeGetSeconds(time));
+    int hh = (int)floorf(seconds / 3600.0f);
+    int mm = (int)floorf((seconds - hh * 3600.0f) / 60.0f);
+    int ss = (((int)seconds) % 60);
+    if (hh > 0)
+    {
+        stringFromCMTime = [NSString stringWithFormat:@"%02d:%02d:%02d", hh, mm, ss];
+    }
+    else
+    {
+        stringFromCMTime = [NSString stringWithFormat:@"%02d:%02d", mm, ss];
+    }
+    return stringFromCMTime;
+}
+
+- (void)log:(NSString *)context entry:(NSString *)entry time:(CMTime)time textAttributes:(NSUInteger)logTextAttributes
+{
+    NSDictionary *attributes;
+    switch (logTextAttributes) {
+        case LogTextAttributes_Event:
+            attributes = _eventTextAttributes;
+            break;
+        case LogTextAttributes_Operation:
+            attributes = _operationTextAttributes;
+            break;
+        case LogTextAttributes_Success:
+            attributes = _successTextAttributes;
+            break;
+        case LogTextAttributes_Error:
+            attributes = _errorTextAttributes;
+            break;
+        default:
+            attributes = _errorTextAttributes;
+            break;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //        [self displayYHeightForFrameBoundsRect:CGRectMake(self.eventLogTextView.frame.origin.y, self.eventLogTextView.frame.size.height, self.eventLogTextView.bounds.origin.y, self.eventLogTextView.bounds.size.height)
+        //         withLabel:@"START"];
+        NSMutableAttributedString *log = [[NSMutableAttributedString alloc] initWithAttributedString:[self.eventLogTextView attributedText]];
+        NSAttributedString *time_s = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n\n%@", stringFromCMTime(time)] attributes:attributes];
+        NSAttributedString *context_s = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@", context] attributes:attributes];
+        NSAttributedString *entry_s = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@", entry] attributes:attributes];
+        [log appendAttributedString:time_s];
+        [log appendAttributedString:context_s];
+        [log appendAttributedString:entry_s];
+        [self.eventLogTextView setAttributedText:log];
+        
+        //        CGRect rect = [self.eventLogTextView firstRectForRange:[self.eventLogTextView textRangeFromPosition:self.eventLogTextView.beginningOfDocument toPosition:self.eventLogTextView.endOfDocument]];
+        //        [self displayYHeightForFrameBoundsRect:CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height) withLabel:@"First rect for range"];
+        //        CGFloat heightDifference = rect.size.height - self.eventLogTextView.bounds.size.height;
+        //        NSLog(@"heightDifference\t%f", heightDifference);
+        //        CGRect visibleRect = CGRectMake(rect.origin.x, rect.origin.y + heightDifference, rect.size.width, rect.size.height);
+        ////        [self displayYHeightForFrameBoundsRect:CGRectMake(visibleRect.origin.x, visibleRect.origin.y, visibleRect.size.width, visibleRect.size.height) withLabel:@"Visible rect"];
+        //        if (heightDifference > 0)
+        //        {
+        //            CGRect newRect = CGRectMake(0, heightDifference, visibleRect.size.width, self.eventLogTextView.bounds.size.height);
+        //            [self.eventLogTextView scrollRectToVisible:newRect animated:TRUE];
+        ////            NSLog(@"New rect\tx: %f, y: %f, w: %f, h: %f\n\n", newRect.origin.x, newRect.origin.y, newRect.size.width, newRect.size.height);
+        //        }
+        ////        [self displayYHeightForFrameBoundsRect:CGRectMake(self.eventLogTextView.frame.origin.y, self.eventLogTextView.frame.size.height, self.eventLogTextView.bounds.origin.y, self.eventLogTextView.bounds.size.height) withLabel:@"END\n\n"];
+    });
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    loggerQueue = dispatch_queue_create_with_target("Logger queue", DISPATCH_QUEUE_SERIAL, dispatch_get_main_queue());
+    taskQueue = dispatch_queue_create_with_target("Task queue", DISPATCH_QUEUE_SERIAL, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
     
     eventStore = [[EKEventStore alloc] init];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(calendarPlanetaryHours) name:@"PlanetaryHoursDataSourceUpdatedNotification" object:nil];
