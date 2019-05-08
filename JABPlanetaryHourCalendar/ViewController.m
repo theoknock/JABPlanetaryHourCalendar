@@ -53,14 +53,21 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
     [eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
         if (granted)
         {
+            [self log:@"EventKit" entry:@"Access to Calendar granted" time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+            
             // Remove any existing Planetary Hours calendar
             NSArray <EKCalendar *> *calendars = [self->eventStore calendarsForEntityType:EKEntityTypeEvent];
-            [calendars enumerateObjectsUsingBlock:^(EKCalendar * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            //            [calendars enumerateObjectsUsingBlock:^(EKCalendar * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            for (EKCalendar *obj in calendars)
+            {
+                [self log:@"EventKit" entry:[NSString stringWithFormat:@"Found %@ calendar...", obj.title] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
+                
+                // TO-DO: Remove condition that a planetary hour calendar must exist in order to add new planetary hour events
                 if ([obj.title isEqualToString:@"Planetary Hour"]) {
                     [self log:@"EventKit" entry:@"Existing planetary hour calendar found..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
                     [self log:@"EventKit" entry:@"Removing existing planetary hour calendar..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
                     
-                    *stop = TRUE;
+                    //                    *stop = TRUE;
                     __autoreleasing NSError *error;
                     if ([self->eventStore removeCalendar:obj commit:TRUE error:&error])
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -68,62 +75,74 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
                             
                             __autoreleasing NSError *removeOldCalendarError;
                             if ([self->eventStore saveCalendar:obj commit:TRUE error:&removeOldCalendarError])
-                                [self log:@"EventKit" entry:@"Changes saved to event store" time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
-                            __block EKCalendar *calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:self->eventStore];
-                            calendar.title = @"Planetary Hour";
-                            calendar.source = self->eventStore.sources[1];
-                            __autoreleasing NSError *error;
-                            if ([self->eventStore saveCalendar:calendar commit:TRUE error:&error])
-                            {
-                                if (error)
-                                {
-                                    [self log:@"EventKit" entry:[NSString stringWithFormat:@"Error creating new planetary hour calendar: %@\nCreating a default calendar for new planetary hour events...", error.localizedDescription] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
-                                    calendar = [self->eventStore defaultCalendarForNewEvents];
-                                } else {
-                                    [self log:@"EventKit" entry:@"New planetary hour calendar created..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
-
-                                }
-                                
-                                NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 365)];      // Calendar one year of events, starting today
-                                NSMutableIndexSet *dataIndices  = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 4)];
-                                [dataIndices addIndex:6];                                                                       // Return 0-4 and  indices of planetary hour data
-                                NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 24)];      // Generate data for each planetary hour of the day
-                                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(PlanetaryHourDataSource.data.locationManager.location.coordinate.latitude, PlanetaryHourDataSource.data.locationManager.location.coordinate.longitude);
-                                [PlanetaryHourDataSource.data solarCyclesForDays:daysIndices planetaryHourData:dataIndices planetaryHours:hoursIndices
-                                                       solarCycleCompletionBlock:nil
-                                                    planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
-                                                        [self->eventStore saveEvent:planetaryHourEvent(self->eventStore, calendar, planetaryHour, coordinate) span:EKSpanThisEvent commit:FALSE error:nil];
-                                                    } planetaryHoursCompletionBlock:^(NSArray<NSDictionary<NSNumber *,NSDate *> *> * _Nonnull planetaryHours) {
-                                                        if ([self->eventStore commit:nil])
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                [self.datePicker setDate:[planetaryHours[0] objectForKey:@(StartDate)]];
-                                                            });
-                                                    } planetaryHourDataSourceCompletionBlock:^(NSError * _Nullable error) {
-                                                        if (error)
-                                                            [self log:@"JABPlanetaryHourFramework" entry:error.description time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
-                                                        else
-                                                            [self log:@"JABPlanetaryHourFramework" entry:@"JABPlanetaryHourFramework calculations complete." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
-                                                        
-                                                        if ([self->eventStore saveCalendar:calendar commit:TRUE error:nil])
-                                                            [self log:@"JABPlanetaryHourFramework" entry:@"New planetary hour calendar saved." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
-                                                        else
-                                                            [self log:@"JABPlanetaryHourFramework" entry:@"Error saving new planetary hour calendar." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
-                                                    }];
-                            }
+                                [self log:@"EventKit" entry:@"Changes saved to Calendar" time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
                             else
                                 [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Error saving changes to event store:\t%@", removeOldCalendarError.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
                         });
                     else
                         [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Error removing planetary hour calendar:/t%@", error.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
+                    
                 }
-            }];
+            } // end for loop here
             
-            
+            __block EKCalendar *calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:self->eventStore];
+            calendar.title = @"Planetary Hour";
+            calendar.source = self->eventStore.sources[1];
+            __autoreleasing NSError *error;
+            if ([self->eventStore saveCalendar:calendar commit:TRUE error:&error])
+            {
+                if (error)
+                {
+                    [self log:@"EventKit" entry:[NSString stringWithFormat:@"Error creating new planetary hour calendar: %@\nCreating a default calendar for new planetary hour events...", error.localizedDescription] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
+                    calendar = [self->eventStore defaultCalendarForNewEvents];
+                } else {
+                    [self log:@"EventKit" entry:@"New planetary hour calendar created..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+                    
+                }
+                
+                [self log:@"JABPlanetaryHourFramework" entry:@"Adding planetary hours to the Planetary Hour calendar..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
+                NSRange days = NSMakeRange(0, 356);
+                NSRange hours = NSMakeRange(0, 24);
+                NSIndexSet *daysIndices  = [[NSIndexSet alloc] initWithIndexesInRange:days];      // Calendar one year of events, starting today
+                NSMutableIndexSet *dataIndices  = [[NSMutableIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 4)];
+                [dataIndices addIndex:6];                                                                       // Return 0-4 and  indices of planetary hour data
+                NSIndexSet *hoursIndices = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, 24)];      // Generate data for each planetary hour of the day
+                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(PlanetaryHourDataSource.data.locationManager.location.coordinate.latitude, PlanetaryHourDataSource.data.locationManager.location.coordinate.longitude);
+                [PlanetaryHourDataSource.data solarCyclesForDays:daysIndices planetaryHourData:dataIndices planetaryHours:hoursIndices
+                                       solarCycleCompletionBlock:nil
+                                    planetaryHourCompletionBlock:^(NSDictionary<NSNumber *,id> * _Nonnull planetaryHour) {
+                                        [self->eventStore saveEvent:planetaryHourEvent(self->eventStore, calendar, planetaryHour, coordinate) span:EKSpanThisEvent commit:FALSE error:nil];
+                                    } planetaryHoursCompletionBlock:^(NSArray<NSDictionary<NSNumber *,NSDate *> *> * _Nonnull planetaryHours) {
+                                        if ([self->eventStore commit:nil])
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [self.datePicker setDate:[planetaryHours[0] objectForKey:@(StartDate)]];
+                                            });
+                                    } planetaryHourDataSourceCompletionBlock:^(NSError * _Nullable error) {
+                                        if (error)
+                                            [self log:@"JABPlanetaryHourFramework" entry:error.description time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
+                                        else
+                                            [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"%d planetary hours added to the Planetary Hour calendar", days.length * hours.length] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+                                        
+                                        if ([self->eventStore saveCalendar:calendar commit:TRUE error:nil])
+                                            [self log:@"JABPlanetaryHourFramework" entry:@"New planetary hour calendar saved." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Success];
+                                        else
+                                            [self log:@"JABPlanetaryHourFramework" entry:@"Error saving new planetary hour calendar." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
+                                    }];
+            }
             
         } else {
-            [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Access to event store denied: %@", error.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
+            [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Access to Calendar denied: %@", error.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
         }
     }];
+    
+    
+    //
+    //        });
+    //    }
+    //     }];
+    
+    
+    //}];
 }
 
 - (void)textStyles
@@ -267,4 +286,8 @@ static NSString *stringFromCMTime(CMTime time)
 //};
 
 @end
+
+
+
+
 
