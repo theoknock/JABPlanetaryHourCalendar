@@ -57,17 +57,14 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
             
             // Remove any existing Planetary Hours calendar
             NSArray <EKCalendar *> *calendars = [self->eventStore calendarsForEntityType:EKEntityTypeEvent];
-            //            [calendars enumerateObjectsUsingBlock:^(EKCalendar * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            for (EKCalendar *obj in calendars)
-            {
+            [calendars enumerateObjectsUsingBlock:^(EKCalendar * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 [self log:@"EventKit" entry:[NSString stringWithFormat:@"Found %@ calendar...", obj.title] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
                 
                 // TO-DO: Remove condition that a planetary hour calendar must exist in order to add new planetary hour events
                 if ([obj.title isEqualToString:@"Planetary Hour"]) {
-                    [self log:@"EventKit" entry:@"Existing planetary hour calendar found..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
-                    [self log:@"EventKit" entry:@"Removing existing planetary hour calendar..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
+                    [self log:@"EventKit" entry:@"Removing existing Planetary Hour calendar..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
                     
-                    //                    *stop = TRUE;
+                    *stop = TRUE;
                     __autoreleasing NSError *error;
                     if ([self->eventStore removeCalendar:obj commit:TRUE error:&error])
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -81,9 +78,10 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
                         });
                     else
                         [self log:@"JABPlanetaryHourFramework" entry:[NSString stringWithFormat:@"Error removing planetary hour calendar:/t%@", error.description] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Error];
-                    
+                    // TO-DO: a new calendar should not be created with new planetary hours if the existing one camnot be deleted
                 }
-            } // end for loop here
+
+            }];
             
             __block EKCalendar *calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:self->eventStore];
             calendar.title = @"Planetary Hour";
