@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import <JABPlanetaryHourCocoaTouchFramework/JABPlanetaryHourCocoaTouchFramework.h>
 #import <CoreMedia/CoreMedia.h>
 
 typedef NS_ENUM(NSUInteger, LogTextAttributes) {
@@ -30,6 +29,23 @@ typedef NS_ENUM(NSUInteger, LogTextAttributes) {
 
 @implementation ViewController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    [self textStyles];
+    
+    [[PlanetaryHourGPUCalculator calculation] setPlanetaryHourDataSourceDelegate:(id<PlanetaryHourDataSourceLogDelegate> _Nullable)self];
+    
+    loggerQueue = dispatch_queue_create_with_target("Logger queue", DISPATCH_QUEUE_SERIAL, dispatch_get_main_queue());
+    taskQueue = dispatch_queue_create_with_target("Task queue", DISPATCH_QUEUE_SERIAL, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+    
+    eventStore = [[EKEventStore alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(calendarPlanetaryHours) name:@"PlanetaryHoursDataSourceUpdatedNotification" object:nil];
+//    [PlanetaryHourDataSource.data.locationManager requestLocation];
+    [[PlanetaryHourDataSource data] setPlanetaryHourDataSourceDelegate:(id<PlanetaryHourDataSourceLogDelegate> _Nullable)self];
+}
+
+
 EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumber *,id> * _Nonnull, CLLocationCoordinate2D) = ^(EKEventStore *planetaryHourEventStore, EKCalendar *planetaryHourCalendar, NSDictionary<NSNumber *,id> * _Nonnull planetaryHourData, CLLocationCoordinate2D referenceCoordinate)
 {
     EKEvent *event     = [EKEvent eventWithEventStore:planetaryHourEventStore];
@@ -50,6 +66,7 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
 - (void)calendarPlanetaryHours
 {
     [self log:@"JABPlanetaryHourFramework" entry:@"Received GPS location data" time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Event];
+    [self log:@"EventKit" entry:@"Requesting access to Calendar event store..." time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
     [eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
         if (granted)
         {
@@ -58,7 +75,7 @@ EKEvent *(^planetaryHourEvent)(EKEventStore *, EKCalendar *, NSDictionary<NSNumb
             // Remove any existing Planetary Hours calendar
             NSArray <EKCalendar *> *calendars = [self->eventStore calendarsForEntityType:EKEntityTypeEvent];
             [calendars enumerateObjectsUsingBlock:^(EKCalendar * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [self log:@"EventKit" entry:[NSString stringWithFormat:@"Found %@ calendar...", obj.title] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Operation];
+                [self log:@"EventKit" entry:[NSString stringWithFormat:@"Found %@ calendar...", obj.title] time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:LogTextAttributes_Event];
                 
                 // TO-DO: Remove condition that a planetary hour calendar must exist in order to add new planetary hour events
                 if ([obj.title isEqualToString:@"Planetary Hour"]) {
@@ -186,6 +203,11 @@ static NSString *stringFromCMTime(CMTime time)
     return stringFromCMTime;
 }
 
+- (void)log:(NSString *)context entry:(NSString *)entry status:(LogEntryType)type
+{
+    [self log:context entry:entry time:CMClockGetTime(CMClockGetHostTimeClock()) textAttributes:(LogTextAttributes)type];
+}
+
 - (void)log:(NSString *)context entry:(NSString *)entry time:(CMTime)time textAttributes:(NSUInteger)logTextAttributes
 {
     NSDictionary *attributes;
@@ -233,18 +255,6 @@ static NSString *stringFromCMTime(CMTime time)
         //        }
         ////        [self displayYHeightForFrameBoundsRect:CGRectMake(self.eventLogTextView.frame.origin.y, self.eventLogTextView.frame.size.height, self.eventLogTextView.bounds.origin.y, self.eventLogTextView.bounds.size.height) withLabel:@"END\n\n"];
     });
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    loggerQueue = dispatch_queue_create_with_target("Logger queue", DISPATCH_QUEUE_SERIAL, dispatch_get_main_queue());
-    taskQueue = dispatch_queue_create_with_target("Task queue", DISPATCH_QUEUE_SERIAL, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
-    
-    eventStore = [[EKEventStore alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(calendarPlanetaryHours) name:@"PlanetaryHoursDataSourceUpdatedNotification" object:nil];
-    [PlanetaryHourDataSource.data.locationManager requestLocation];
 }
 
 //NSDate *(^floorSecondsForDate)(NSDate *) = ^(NSDate *date) {

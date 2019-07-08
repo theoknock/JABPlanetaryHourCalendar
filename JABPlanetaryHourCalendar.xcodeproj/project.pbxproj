@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B9303C1B22A384FD00761337 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B9303C1822A384A700761337 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B93BC5C9226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; };
-		B93BC5CA226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B95CABBC229CAAA300F43576 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B95CABBB229CAAA200F43576 /* CoreMedia.framework */; };
 		B9C0CF77226D492E00EBA7C0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF76226D492E00EBA7C0 /* AppDelegate.m */; };
 		B9C0CF7A226D492E00EBA7C0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C0CF79226D492E00EBA7C0 /* ViewController.m */; };
 		B9C0CF7D226D492E00EBA7C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9C0CF7B226D492E00EBA7C0 /* Main.storyboard */; };
@@ -24,7 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B93BC5CA226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
+				B9303C1B22A384FD00761337 /* JABPlanetaryHourCocoaTouchFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -32,8 +33,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B9303C1822A384A700761337 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JABPlanetaryHourCocoaTouchFramework.framework; path = "../../../../Library/Developer/Xcode/DerivedData/JABPlanetaryHourFrameworkWorkspace-fjiawwtcghcecscvdmypuluchzpt/Build/Products/Debug-iphoneos/JABPlanetaryHourCocoaTouchFramework.framework"; sourceTree = "<group>"; };
 		B93BC589226E578E00BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourCocoaTouchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JABPlanetaryHourCocoaTouchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B95CABBB229CAAA200F43576 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		B9C0CF72226D492E00EBA7C0 /* JABPlanetaryHourCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JABPlanetaryHourCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C0CF75226D492E00EBA7C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9C0CF76226D492E00EBA7C0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -44,15 +47,6 @@
 		B9C0CF81226D492E00EBA7C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9C0CF83226D492E00EBA7C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9C0CF84226D492E00EBA7C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B9C2566722860DC80064340C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		B9C2566822860DC80064340C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B9C2566922860DC80064340C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		B9C2566B22860DC80064340C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B9C2566D22860DC80064340C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B9C2566E22860DC80064340C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B9C2566F22860DC80064340C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B9C2567022860DC80064340C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B9C2567122860DC80064340C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B95CABBC229CAAA300F43576 /* CoreMedia.framework in Frameworks */,
 				B93BC5C9226EE17100BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -70,6 +65,7 @@
 		B93BC574226E52E700BB32B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B95CABBB229CAAA200F43576 /* CoreMedia.framework */,
 				B93BC589226E578E00BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */,
 			);
 			name = Frameworks;
@@ -79,7 +75,6 @@
 			isa = PBXGroup;
 			children = (
 				B93BC591226E58B200BB32B7 /* JABPlanetaryHourCocoaTouchFramework.framework */,
-				B9C2566622860DC80064340C /* JABPlanetaryHourClockKitComplication */,
 				B9C0CF74226D492E00EBA7C0 /* JABPlanetaryHourCalendar */,
 				B9C0CF73226D492E00EBA7C0 /* Products */,
 				B93BC574226E52E700BB32B7 /* Frameworks */,
@@ -108,23 +103,6 @@
 				B9C0CF84226D492E00EBA7C0 /* main.m */,
 			);
 			path = JABPlanetaryHourCalendar;
-			sourceTree = "<group>";
-		};
-		B9C2566622860DC80064340C /* JABPlanetaryHourClockKitComplication */ = {
-			isa = PBXGroup;
-			children = (
-				B9C2566722860DC80064340C /* AppDelegate.h */,
-				B9C2566822860DC80064340C /* Assets.xcassets */,
-				B9C2566922860DC80064340C /* ViewController.m */,
-				B9C2566A22860DC80064340C /* LaunchScreen.storyboard */,
-				B9C2566C22860DC80064340C /* Main.storyboard */,
-				B9C2566E22860DC80064340C /* main.m */,
-				B9C2566F22860DC80064340C /* AppDelegate.m */,
-				B9C2567022860DC80064340C /* Info.plist */,
-				B9C2567122860DC80064340C /* ViewController.h */,
-			);
-			name = JABPlanetaryHourClockKitComplication;
-			path = ../JABPlanetaryHourClockKitComplication/JABPlanetaryHourClockKitComplication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,22 +199,6 @@
 				B9C0CF81226D492E00EBA7C0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		B9C2566A22860DC80064340C /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B9C2566B22860DC80064340C /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		B9C2566C22860DC80064340C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B9C2566D22860DC80064340C /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

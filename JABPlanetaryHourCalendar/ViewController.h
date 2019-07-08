@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import <EventKit/EventKit.h>
+#import <JABPlanetaryHourCocoaTouchFramework/JABPlanetaryHourCocoaTouchFramework.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <PlanetaryHourDataSourceLogDelegate>
 
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (weak, nonatomic) IBOutlet UITextView *eventLogTextView;
+
+- (void)log:(NSString *)context entry:(NSString *)entry status:(LogEntryType)type;
 
 @end
 
