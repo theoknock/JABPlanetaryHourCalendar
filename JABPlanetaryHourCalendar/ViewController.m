@@ -256,6 +256,8 @@ static NSString *stringFromCMTime(CMTime time)
         ////        [self displayYHeightForFrameBoundsRect:CGRectMake(self.eventLogTextView.frame.origin.y, self.eventLogTextView.frame.size.height, self.eventLogTextView.bounds.origin.y, self.eventLogTextView.bounds.size.height) withLabel:@"END\n\n"];
     });
 }
+- (IBAction)toggleToneGenerator:(UITapGestureRecognizer *)sender {
+}
 
 //NSDate *(^floorSecondsForDate)(NSDate *) = ^(NSDate *date) {
 //    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
